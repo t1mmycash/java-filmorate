@@ -32,12 +32,17 @@ public class UserController {
             user.setName(user.getLogin());
         }
         users.put(user.getId(), user);
-        log.debug("Создан новый пользователь:\n" + user.toString());
+        log.debug("Создан новый пользователь:\n" + user);
         return user;
     }
 
     @PutMapping
     public User updateUser(@RequestBody @Valid User user) {
+        if(!users.containsKey(user.getId())) {
+            String message = "Пользователя с id=" + user.getId() + " не существет.";
+            log.error(message);
+            throw new ValidationException(message);
+        }
         if (user.getLogin().contains(" ")) {
             String message = "Логин не может содержать пробелы.";
             log.error(message);
@@ -49,7 +54,7 @@ public class UserController {
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        log.debug("Пользователь:\n{}\nБыл изменён на:\n{}", users.get(user.getId()).toString(), user.toString());
+        log.debug("Пользователь:\n{}\nБыл изменён на:\n{}", users.get(user.getId()), user);
         users.remove(user.getId());
         users.put(user.getId(), user);
         return user;

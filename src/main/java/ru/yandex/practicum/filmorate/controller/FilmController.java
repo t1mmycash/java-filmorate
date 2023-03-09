@@ -29,18 +29,23 @@ public class FilmController {
         }
         film.setId(newId());
         films.put(film.getId(), film);
-        log.debug("Новый фильм:\n" + film.toString());
+        log.debug("Новый фильм:\n" + film);
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
+        if(!films.containsKey(film.getId())) {
+            String message = "Фильма с id=" + film.getId() + " не существет.";
+            log.error(message);
+            throw new ValidationException(message);
+        }
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             String message = "Дата публикации не может быть раньше 28.12.1895.";
             log.error(message);
             throw new ValidationException(message);
         }
-        log.debug("Фильм:\n{}\nЗаменен на:{}", films.get(film.getId()).toString(), film.toString());
+        log.debug("Фильм:\n{}\nЗаменен на:{}", films.get(film.getId()), film);
         films.remove(film.getId());
         films.put(film.getId(), film);
         return film;
@@ -48,7 +53,7 @@ public class FilmController {
 
     @GetMapping
     public ArrayList<Film> getAllFilms() {
-        return new ArrayList<Film>(films.values());
+        return new ArrayList<>(films.values());
     }
 
     public HashMap<Integer, Film> getFilms() {
