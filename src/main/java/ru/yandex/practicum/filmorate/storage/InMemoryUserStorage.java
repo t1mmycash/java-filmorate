@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 @Component
 @Slf4j
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final HashMap<Long, User> users = new HashMap<>();
     private long id = 0;
@@ -25,7 +25,7 @@ public class InMemoryUserStorage implements UserStorage{
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if(user.getFriends() == null) {
+        if (user.getFriends() == null) {
             user.setFriends(new HashSet<>());
         }
         users.put(user.getId(), user);
@@ -42,7 +42,7 @@ public class InMemoryUserStorage implements UserStorage{
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if(user.getFriends() == null) {
+        if (user.getFriends() == null) {
             user.setFriends(new HashSet<>());
         }
         log.debug("Пользователь:\n{}\nБыл изменён на:\n{}", users.get(user.getId()), user);

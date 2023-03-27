@@ -80,7 +80,7 @@ public class FilmController {
     }
 
     private void checkId(Long id) {
-        if(id == null) {
+        if (id == null) {
             throw new ValidationException("id не может быть null");
         }
     }

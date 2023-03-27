@@ -19,7 +19,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         film.setId(newId());
-        if(film.getLikes() == null) {
+        if (film.getLikes() == null) {
             film.setLikes(new HashSet<>());
         }
         films.put(film.getId(), film);
@@ -30,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         filmExistenceCheck(film.getId());
-        if(film.getLikes() == null) {
+        if (film.getLikes() == null) {
             film.setLikes(new HashSet<>());
         }
         log.debug("Фильм:\n{}\nЗаменен на:{}", films.get(film.getId()), film);
@@ -61,6 +61,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new FilmNotFoundException(String.format("Фильм с id=%d не найден", id));
         }
     }
+
     private long newId() {
         id += 1;
         return id;
