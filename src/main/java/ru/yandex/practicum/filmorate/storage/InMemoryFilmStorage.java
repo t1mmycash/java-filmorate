@@ -19,9 +19,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         film.setId(newId());
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
         films.put(film.getId(), film);
         log.debug("Новый фильм:\n" + film);
         return film;
@@ -30,11 +27,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         filmExistenceCheck(film.getId());
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
         log.debug("Фильм:\n{}\nЗаменен на:{}", films.get(film.getId()), film);
-        films.remove(film.getId());
         films.put(film.getId(), film);
         return film;
     }

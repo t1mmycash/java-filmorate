@@ -25,9 +25,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if (user.getFriends() == null) {
-            user.setFriends(new HashSet<>());
-        }
         users.put(user.getId(), user);
         log.debug("Создан новый пользователь:\n" + user);
         return user;
@@ -42,11 +39,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if (user.getFriends() == null) {
-            user.setFriends(new HashSet<>());
-        }
         log.debug("Пользователь:\n{}\nБыл изменён на:\n{}", users.get(user.getId()), user);
-        users.remove(user.getId());
         users.put(user.getId(), user);
         return user;
     }
