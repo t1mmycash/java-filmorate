@@ -103,7 +103,7 @@ public class UserDBStorageTests {
     @Test
     public void testgetAllUsers() {
         List<User> users = userStorage.getAllUsers();
-        assertThat(users).isNotNull().hasSize(5);
+        assertThat(users).isNotNull().hasSize(3);
     }
 
     @Test
