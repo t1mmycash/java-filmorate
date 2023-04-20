@@ -104,8 +104,7 @@ public class FilmDBStorageTests {
                 .birthday(LocalDate.now().minusYears(10))
                 .build());
         likeStorage.like(1, 1);
-        Assertions.assertEquals((jdbcTemplate.query("select user_id from likes where film_id = 1;"
-                , new SingleColumnRowMapper<>(Integer.class)).get(0)), 1);
+        Assertions.assertEquals((jdbcTemplate.query("select user_id from likes where film_id = 1;", new SingleColumnRowMapper<>(Integer.class)).get(0)), 1);
 
     }
 
