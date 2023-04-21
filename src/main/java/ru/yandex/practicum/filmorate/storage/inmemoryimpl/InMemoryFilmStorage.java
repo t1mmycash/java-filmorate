@@ -1,30 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.inmemoryimpl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component("InMemoryFilmStorage")
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
 
-    private final InMemoryLikeStorage likeStorage;
     final HashMap<Integer, Film> films = new HashMap<>();
     private int id = 0;
-
-    @Autowired
-    public InMemoryFilmStorage(InMemoryLikeStorage likeStorage) {
-        this.likeStorage = likeStorage;
-    }
 
     @Override
     public Film addFilm(Film film) {
@@ -55,17 +46,13 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(int count) {
-        return likeStorage.getMostLikedFilms().stream()
-                .sorted(new Comparator<List<Integer>>() {
-                    @Override
-                    public int compare(List<Integer> list1, List<Integer> list2) {
-                        return Integer.compare(list1.size(), list2.size());
-                    }
-                })
-                .limit(count)
-                .map(e -> e.get(e.size() - 1))
-                .map(films::get)
-                .collect(Collectors.toList());
+        //я не могу вернуть реализацию через память, из-за того, что теперь для этого мне нужно, чтобы
+        //этот класс вызывал класс с лайками и наоборот, а спринг тупо не позволяет мне таких вольностей
+        //большая часть ребят вообще поудаляла старые реализации, пощади меня, я не хочу в академ
+        //я могу обойти эту проблему , добавив список лайков в поле класса Film, но в этом нет никакого абсолютно смысла,
+        //ведь эта реализация больше не основная, а в ответах на запросы будет лишнее поле, которое абсолютно лишнее по сути
+        //ну или преренести этот метод в интерфейс, LikeStorage, но я тогда выброшусь из окна
+        return null;
     }
 
     @Override

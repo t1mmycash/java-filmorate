@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.interfaces.FriendStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dbimpl.FriendDBStorage;
+import ru.yandex.practicum.filmorate.storage.dbimpl.UserDBStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDBStorageTests {
-    private final UserStorage userStorage;
-    private final FriendStorage friendStorage;
+    private final UserDBStorage userStorage;
+    private final FriendDBStorage friendStorage;
 
 
     @Test

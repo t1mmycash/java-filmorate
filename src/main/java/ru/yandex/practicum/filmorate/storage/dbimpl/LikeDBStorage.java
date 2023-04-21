@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate.storage.dbimpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 
 @Component("LikeDBStorage")
+@Primary
 @RequiredArgsConstructor
 public class LikeDBStorage implements LikeStorage {
 

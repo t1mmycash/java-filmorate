@@ -12,9 +12,9 @@ import org.springframework.jdbc.core.SingleColumnRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MPAA;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.dbimpl.FilmDBStorage;
+import ru.yandex.practicum.filmorate.storage.dbimpl.UserDBStorage;
 import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
-import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,8 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmDBStorageTests {
     private final JdbcTemplate jdbcTemplate;
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final FilmDBStorage filmStorage;
+    private final UserDBStorage userStorage;
     private final LikeStorage likeStorage;
 
     @Test
