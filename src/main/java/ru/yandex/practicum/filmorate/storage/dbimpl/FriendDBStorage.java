@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@Component
+@Component("FriendDBStorage")
 @RequiredArgsConstructor
 public class FriendDBStorage implements FriendStorage {
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 
-@Component
+@Component("LikeDBStorage")
 @RequiredArgsConstructor
 public class LikeDBStorage implements LikeStorage {
 

@@ -24,7 +24,7 @@ public class FilmService {
     @Autowired
     public FilmService(@Qualifier("FilmDBStorage") FilmStorage filmStorage,
                        @Qualifier("UserDBStorage") UserStorage userStorage,
-                       LikeStorage likeStorage,
+                       @Qualifier("LikeDBStorage") LikeStorage likeStorage,
                        FilmGenresStorage filmGenresStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
