@@ -1,19 +1,21 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inmemoryimpl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-@Component
+@Component("InMemoryUserStorage")
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
 
-    private final HashMap<Long, User> users = new HashMap<>();
-    private long id = 0;
+    private final HashMap<Integer, User> users = new HashMap<>();
+    private int id = 0;
 
     @Override
     public User addUser(User user) {
@@ -44,29 +46,28 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(int id) {
         userExistenceCheck(id);
         return users.get(id);
     }
 
-    @Override
-    public HashMap<Long, User> getUsers() {
+    public HashMap<Integer, User> getUsers() {
         return users;
     }
 
     @Override
-    public void userExistenceCheck(long id) {
+    public void userExistenceCheck(int id) {
         if (!users.containsKey(id)) {
             throw new UserNotFoundException(String.format("Пользователь с id=%d не найден", id));
         }
     }
 
-    private Long newId() {
+    private int newId() {
         id += 1;
         return id;
     }

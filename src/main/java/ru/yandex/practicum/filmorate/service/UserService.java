@@ -1,58 +1,67 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.FriendStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService {
     private final UserStorage userStorage;
+    private final FriendStorage friendStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage userStorage) {
+    public UserService(@Qualifier("UserDBStorage") UserStorage userStorage,
+                       @Qualifier("FriendDBStorage") FriendStorage friendStorage) {
         this.userStorage = userStorage;
+        this.friendStorage = friendStorage;
     }
 
-    public String addFriend(long id, long friendId) {
+    public User addUser(User user) {
+        return userStorage.addUser(user);
+    }
+
+    public User updateUser(User user) {
+        userStorage.userExistenceCheck(user.getId());
+        return userStorage.updateUser(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userStorage.getAllUsers();
+    }
+
+    public User getUserById(int id) {
+        userStorage.userExistenceCheck(id);
+        return userStorage.getUserById(id);
+    }
+
+    public String addFriend(int id, int friendId) {
         userStorage.userExistenceCheck(id);
         userStorage.userExistenceCheck(friendId);
-        userStorage.getUserById(id).getFriends().add(friendId);
-        userStorage.getUserById(friendId).getFriends().add(id);
+        friendStorage.addFriend(id, friendId);
         return "Друг был успешно добавлен";
     }
 
-    public String deleteFriend(long id, long friendId) {
+    public String deleteFriend(int id, int friendId) {
         userStorage.userExistenceCheck(id);
         userStorage.userExistenceCheck(friendId);
-        userStorage.getUserById(id).getFriends().remove(friendId);
-        userStorage.getUserById(friendId).getFriends().remove(id);
+        friendStorage.deleteFriend(id, friendId);
         return "Друг был успешно удалён";
     }
 
-    public Collection<User> getFriendsById(Long id) {
+    public List<User> getFriendsById(int id) {
         userStorage.userExistenceCheck(id);
-        ArrayList<User> result = new ArrayList<>();
-        for (Long friendId : userStorage.getUserById(id).getFriends()) {
-            result.add(userStorage.getUserById(friendId));
-        }
-        return result;
+        return friendStorage.getFriendsById(id);
     }
 
-    public Collection<User> getCommonFriends(long id, long otherId) {
+    public List<User> getCommonFriends(int id, int otherId) {
         userStorage.userExistenceCheck(id);
         userStorage.userExistenceCheck(otherId);
-        ArrayList<User> result = new ArrayList<>();
-        for (Long firstUserFriend : userStorage.getUserById(id).getFriends()) {
-            if (userStorage.getUserById(otherId).getFriends().contains(firstUserFriend) && firstUserFriend != otherId) {
-                result.add(userStorage.getUserById(firstUserFriend));
-            }
-        }
-        return result;
+        return friendStorage.getCommonFriends(id, otherId);
     }
 
 }

@@ -1,50 +1,81 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmGenresStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.LikeStorage;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final LikeStorage likeStorage;
+    private final FilmGenresStorage filmGenresStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage, InMemoryUserStorage userStorage) {
+    public FilmService(@Qualifier("FilmDBStorage") FilmStorage filmStorage,
+                       @Qualifier("UserDBStorage") UserStorage userStorage,
+                       @Qualifier("LikeDBStorage") LikeStorage likeStorage,
+                       FilmGenresStorage filmGenresStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.likeStorage = likeStorage;
+        this.filmGenresStorage = filmGenresStorage;
     }
 
-    public String likeTheFilm(long id, long userId) {
+    public Film addFilm(Film film) {
+        Film result = filmStorage.addFilm(film);
+        filmGenresStorage.addAllFilmGenres(film);
+        return result;
+    }
+
+    public Film updateFilm(Film film) {
+        filmStorage.filmExistenceCheck(film.getId());
+        ArrayList<Genre> distinctList = new ArrayList<>();
+        for (Genre genre : film.getGenres()) {
+            if (!distinctList.contains(genre)) {
+                distinctList.add(genre);
+            }
+        }
+        film.setGenres(distinctList);
+        filmStorage.updateFilm(film);
+        filmGenresStorage.updateFilmGenres(film);
+        return film;
+    }
+
+    public List<Film> getAllFilms() {
+        return filmStorage.getAllFilms();
+    }
+
+    public Film getFilmById(int id) {
         filmStorage.filmExistenceCheck(id);
+        return filmStorage.getFilmById(id);
+    }
+
+
+    public String like(int filmId, int userId) {
+        filmStorage.filmExistenceCheck(filmId);
         userStorage.userExistenceCheck(userId);
-        filmStorage.getFilms().get(id).getLikes().add(userId);
-        return filmStorage.getFilms().get(id).getLikes().toString();
+        return likeStorage.like(filmId, userId);
     }
 
-    public String removeLike(long id, long userId) {
-        filmStorage.filmExistenceCheck(id);
+    public String removeLike(int filmId, int userId) {
+        filmStorage.filmExistenceCheck(filmId);
         userStorage.userExistenceCheck(userId);
-        filmStorage.getFilmById(id).getLikes().remove(userId);
-        return "Лайк успешно удален";
+        return likeStorage.removeLike(filmId, userId);
     }
 
-    public Collection<Film> getPopularFilms(long count) {
-        return filmStorage.getFilms().values().stream()
-                .sorted(this::compare)
-                .limit(count)
-                .collect(Collectors.toList());
+    public List<Film> getPopularFilms(int count) {
+        return filmStorage.getPopularFilms(count);
     }
 
-    private int compare(Film f0, Film f1) {
-        return f1.getLikes().size() - f0.getLikes().size();
-    }
 }

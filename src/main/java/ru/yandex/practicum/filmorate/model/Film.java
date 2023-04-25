@@ -6,14 +6,14 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 public class Film {
-    private long id;
+    private int id;
     @NotBlank
     private String name;
     @NotBlank
@@ -23,17 +23,20 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private int duration;
-    private Set<Long> likes;
+    private MPAA mpa;
+    private List<Genre> genres;
 
-    public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likes) {
+    public Film(int id, String name, String description, LocalDate releaseDate, int duration, MPAA mpa, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.likes = likes;
-        if (likes == null) {
-            this.likes = new HashSet<>();
+        this.mpa = mpa;
+        this.genres = genres;
+        if (genres == null) {
+            this.genres = new ArrayList<>();
         }
+
     }
 }
